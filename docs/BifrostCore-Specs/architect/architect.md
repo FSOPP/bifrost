@@ -11,7 +11,7 @@ updated: 2026-09-21
 
 ## System context
 
-D: `core/` has no external actor of its own — no HTTP surface, no entrypoint [D: survey "HTTP surface: none found", "Entrypoints: none found"]. It crosses two kinds of boundary: (1) outbound, to 20+ LLM/voice/image provider APIs over `fasthttp`/`net-http` [D: core/network/http.go:449]; (2) inbound, as a Go library called by `transports/bifrost-http` and `cli/`, which are separate modules [D: go.work:1; repowise architecture map edge `module_transports_bifrost_http_handlers -> module_core_providers` (120 refs)].
+D: `core/` has no external actor of its own — no HTTP surface, no entrypoint [D: survey "HTTP surface: none found", "Entrypoints: none found"]. It crosses two kinds of boundary: (1) outbound, to 20+ LLM/voice/image provider APIs over `fasthttp`/`net-http` [D: core/network/http.go:449]; (2) inbound, as a Go library called by `transports/bifrost-http` and `cli/`, which are separate modules — I: inferred from `core/go.mod`'s module path (`github.com/maximhq/bifrost/core`) being importable by sibling modules, not from `go.work` itself, which is gitignored (`.gitignore:39-40`) and absent from this checkout [D: core/go.mod:1, .gitignore:39-40]; repowise architecture map edge `module_transports_bifrost_http_handlers -> module_core_providers` (120 refs) corroborates the same conclusion independently.
 
 ## Component view
 

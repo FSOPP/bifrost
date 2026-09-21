@@ -7,6 +7,10 @@
     "ChannelMessage": {
       "type": "object",
       "description": "Pooled per-request unit that travels through a provider's queue/worker channel. Owned by: F-001 Core Engine. Introduced by: F-001. [D: core/bifrost.go:62]",
+      "properties": {
+        "handoff": { "type": "string", "description": "CAS-guarded enum: open/claimed/abandoned, exactly one winner [D: core/bifrost.go:76,79-83]" },
+        "sentAt": { "type": "string", "description": "zero value = unset; stamped by worker immediately before sending [D: core/bifrost.go:69]" }
+      },
       "additionalProperties": true
     },
     "Fallback": {
@@ -52,16 +56,45 @@
     "BifrostError": {
       "type": "object",
       "description": "Normalized error envelope with provider/model/request-type metadata. Owned by: F-002. Introduced by: F-002. [D: core/schemas/bifrost.go:1954]",
+      "properties": {
+        "IsBifrostError": { "type": "boolean" },
+        "Error": { "type": "object", "description": "nested error detail, e.g. Message [D: core/schemas/bifrost.go:1954-1963]" }
+      },
       "additionalProperties": true
     },
     "BifrostChatRequest": {
       "type": "object",
       "description": "Chat completion request shape. Owned by: F-002 (canonical shape) / converted per-provider in F-003. Introduced by: F-002. [D: core/schemas/chatcompletions.go:14]",
+      "properties": {
+        "Provider": { "type": "string", "description": "ModelProvider [D: chatcompletions.go:14-21]" },
+        "Model": { "type": "string" },
+        "Input": { "type": "array", "description": "[]ChatMessage, omitempty" },
+        "Params": { "type": "object", "description": "*ChatParameters" },
+        "Fallbacks": { "type": "array", "description": "[]Fallback" }
+      },
       "additionalProperties": true
     },
     "BifrostChatResponse": {
       "type": "object",
       "description": "Chat completion response shape. Owned by: F-002. Introduced by: F-002. [D: core/schemas/chatcompletions.go:36]",
+      "properties": {
+        "ID": { "type": "string" },
+        "Created": { "type": "integer", "description": "unix seconds [D: chatcompletions.go:36-55]" },
+        "Model": { "type": "string" },
+        "Object": { "type": "string" },
+        "SystemFingerprint": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "Key": {
+      "type": "object",
+      "description": "Provider API key record: identity, weighting, per-provider key config, enablement. Owned by: F-002. Introduced by: F-002. [D: core/schemas/account.go:135-160]",
+      "properties": {
+        "ID": { "type": "string" },
+        "Name": { "type": "string" },
+        "Weight": { "type": "number", "description": "load-balancing weight [D: account.go:135-160]" },
+        "Enabled": { "type": "boolean" }
+      },
       "additionalProperties": true
     },
     "ChatMessage": {
@@ -86,7 +119,10 @@
     },
     "MCPClientEntry": {
       "type": "object",
-      "description": "An MCP client's connection-state record (Disconnected/Connected). Owned by: F-004. Introduced by: F-004. [D: core/mcp/clientmanager.go:2090]",
+      "description": "An MCP client's connection-state record. Owned by: F-004. Introduced by: F-004. [D: core/mcp/clientmanager.go:2090]. CONTRADICTION FLAGGED: the code comment at this line names states 'Disconnected'/'Connected', but the real MCPConnectionState enum values are healthy/unstable/error/pending_verification/disabled/needs_reauth/degraded — see ddd/domain_DOM-001-mcp-integration.md Open questions. Do not treat 'Disconnected'/'Connected' as real values.",
+      "properties": {
+        "State": { "type": "string", "enum": ["healthy", "unstable", "error", "pending_verification", "disabled", "needs_reauth", "degraded"], "description": "real enum values, not the stale comment's Disconnected/Connected" }
+      },
       "additionalProperties": true
     }
   }

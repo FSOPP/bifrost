@@ -15,18 +15,18 @@ updated: 2026-09-21
 
 ## Summary
 
-I: MCP Integration turns Bifrost from a static chat-completion gateway into a tool-calling agent runtime — it manages MCP server connections, filters and executes tools on the model's behalf across multiple turns, and does so with safety opt-outs so an unreliable connection cannot cause a destructive action twice — basis: the shape of `agent.go`'s loop, `toolmanager.go`'s retry-opt-out gate, and `clientmanager.go`'s connection lifecycle, taken together [D: mcp/agent.go, mcp/toolmanager.go, mcp/clientmanager.go].
+I: MCP Integration turns Bifrost from a static chat-completion gateway into a tool-calling agent runtime — it manages MCP server connections, filters and executes tools on the model's behalf across multiple turns, and does so with safety opt-outs so an unreliable connection cannot cause a destructive action twice — basis: the shape of `agent.go`'s loop, `toolmanager.go`'s retry-opt-out gate, and `clientmanager.go`'s connection lifecycle, taken together [D: core/mcp/agent.go, core/mcp/toolmanager.go, core/mcp/clientmanager.go].
 
 ## User stories
 
-- **F-004-US1**: As an operator running MCP tools through Bifrost, a destructive tool that is not idempotent is never automatically retried after an auth failure, so a transient credential hiccup cannot cause the tool's side effect twice — inferred from `TestExecuteTool_AuthFailureRetry_DestructiveNonIdempotent_SkipsRetry` and its sibling cases [D: mcp/auth_retry_test.go:811, 689, 846, 875].
-- **F-004-US2**: As an operator rotating MCP client credentials, a rotation that races an admin disabling the same client does not resurrect it into a re-auth-needed state — inferred from `TestCloseAndMarkNeedsReauth_Disabled_IsNoOp` [D: mcp/clientmanager_test.go:223].
-- **F-004-US3**: As a caller of the agent loop, canceling my request does not need to wait out a background reconnect's full budget — inferred from the comment-stated rule at `mcp/toolmanager.go:962` (no directly-named test found for it — see the coverage gap in `tests/test_1.9.1_F-004.md`).
+- **F-004-US1**: As an operator running MCP tools through Bifrost, a destructive tool that is not idempotent is never automatically retried after an auth failure, so a transient credential hiccup cannot cause the tool's side effect twice — inferred from `TestExecuteTool_AuthFailureRetry_DestructiveNonIdempotent_SkipsRetry` and its sibling cases [D: core/mcp/auth_retry_test.go:811, 689, 846, 875].
+- **F-004-US2**: As an operator rotating MCP client credentials, a rotation that races an admin disabling the same client does not resurrect it into a re-auth-needed state — inferred from `TestCloseAndMarkNeedsReauth_Disabled_IsNoOp` [D: core/mcp/clientmanager_test.go:223].
+- **F-004-US3**: As a caller of the agent loop, canceling my request does not need to wait out a background reconnect's full budget — inferred from the comment-stated rule at `core/mcp/toolmanager.go:962` (no directly-named test found for it — see the coverage gap in `tests/test_1.9.1_F-004.md`).
 
 ## Acceptance criteria
 
-- **US1**: Given a tool annotated (or defaulted, per spec, to) destructive+non-idempotent, when a call to it fails with an auth-shaped error, then the retry is skipped and the original error surfaces unchanged [D: mcp/toolmanager.go:859-864].
-- **US2**: Given a client in `Disabled` state, when a credential-rotation call races in, then the client's state remains `Disabled`, not `needs_reauth` [D: mcp/clientmanager_test.go:223].
+- **US1**: Given a tool annotated (or defaulted, per spec, to) destructive+non-idempotent, when a call to it fails with an auth-shaped error, then the retry is skipped and the original error surfaces unchanged [D: core/mcp/toolmanager.go:859-864].
+- **US2**: Given a client in `Disabled` state, when a credential-rotation call races in, then the client's state remains `Disabled`, not `needs_reauth` [D: core/mcp/clientmanager_test.go:223].
 - **US3**: OPEN — no test name confirms this criterion end-to-end; the criterion is inferred from a code comment only.
 
 ## Implementation status

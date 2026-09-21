@@ -11,9 +11,7 @@
       "docs/BifrostCore-Specs/PRDs/prd.md",
       "docs/BifrostCore-Specs/PRDs/prd_1.9.1_F-002-provider-abstraction.md"
     ],
-    "adrs": [
-      "docs/BifrostCore-Specs/ADRs/adrs_ADR-0001-record-architecture-decisions.md"
-    ],
+    "adrs": [],
     "architecture": [
       "docs/BifrostCore-Specs/architect/architect_common.md",
       "docs/BifrostCore-Specs/status-model.md",
@@ -21,10 +19,10 @@
     ],
     "data": [
       "docs/BifrostCore-Specs/data/data-master-erd.md",
+      "docs/BifrostCore-Specs/data/schema/schemas.json",
       "docs/BifrostCore-Specs/data/data-erd_1.9.1_F-002.md",
       "docs/BifrostCore-Specs/data/api-contract_1.9.1_F-002.md",
       "docs/BifrostCore-Specs/data/data-fixtures_1.9.1_F-002.md",
-      "docs/BifrostCore-Specs/data/schema/schemas.json",
       "docs/BifrostCore-Specs/data/schema/erd_1.9.1_F-002.puml",
       "docs/BifrostCore-Specs/data/schema/openapi_1.9.1_F-002.json",
       "docs/BifrostCore-Specs/data/schema/asyncapi_1.9.1_F-002.json",
@@ -37,9 +35,7 @@
       "docs/BifrostCore-Specs/tests/testing_strategy.md",
       "docs/BifrostCore-Specs/tests/test_1.9.1_F-002.md"
     ],
-    "runbooks": [
-      "docs/BifrostCore-Specs/runbook/runbook_DEV_RB-001-local-setup.md"
-    ]
+    "runbooks": []
   },
   "writes": {
     "code": [],

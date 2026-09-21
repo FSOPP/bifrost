@@ -19,7 +19,7 @@ updated: 2026-09-21
 
 ## Steps
 
-I: every command below is taken from AGENTS.md's stated Build/Test/Dev commands (repo root, not `core/`-internal) — marked `I:` because none were executed in this session:
+I: every command below is taken from AGENTS.md's stated Build/Test/Dev commands — basis: AGENTS.md's own "Build, Test & Dev Commands" section (repo root, not `core/`-internal) — marked `I:` because none were executed in this session:
 1. `git clone` / `cd` into the repo (assumed).
 2. I: `make dev` — full local dev (UI + API with hot reload via `air`).
 3. I: `make build` — build the `bifrost-http` binary.
@@ -27,7 +27,7 @@ I: every command below is taken from AGENTS.md's stated Build/Test/Dev commands 
 
 ## Verification
 
-I: `go build ./...` inside `core/` succeeding, and `go test ./...` in `core/` with no provider env vars set (expected: live-API-gated tests skip rather than fail) — neither was run in this pass; this is the check someone else can run, not a result observed here.
+I: `go build ./...` inside `core/` succeeding, and `go test ./...` in `core/` with no provider env vars set (expected: live-API-gated tests skip rather than fail) — basis: survey.md's declared test command (`go test ./...` at `core/go.mod:1`) combined with providers' own env-var-gated skip pattern (e.g. `core/providers/openai/openai_test.go:15`) — neither was run in this pass; this is the check someone else can run, not a result observed here.
 
 ## Rollback / cleanup
 

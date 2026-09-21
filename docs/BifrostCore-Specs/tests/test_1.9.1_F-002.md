@@ -48,8 +48,10 @@ updated: 2026-09-21
 
 ## Edge and negative cases
 
-`NetworkConfig.UnmarshalJSON` rejecting a malformed duration string [D: provider.go:163-166]; `AllowedRequests.IsOperationAllowed` defaulting to `false` for an unknown `RequestType` (fail-closed) vs. a nil `*AllowedRequests` defaulting to `true` (fail-open) [D: provider.go:401-404, 529-531 — AGENTS.md gotcha #10]; `SetValue` on a reserved key while `blockRestrictedWrites` is set silently drops the write rather than erroring [D: context.go:480-484].
+`NetworkConfig.UnmarshalJSON` rejecting a malformed duration string [D: core/schemas/provider.go:163-166]; `AllowedRequests.IsOperationAllowed` defaulting to `false` for an unknown `RequestType` (fail-closed) vs. a nil `*AllowedRequests` defaulting to `true` (fail-open) [D: core/schemas/provider.go:401-404, 529-531 — AGENTS.md gotcha #10]; `SetValue` on a reserved key while `blockRestrictedWrites` is set silently drops the write rather than erroring [D: core/schemas/context.go:480-484].
 
 ## Out of scope
 
-Provider-specific test suites (`core/providers/*/*_test.go`) — covered under F-003. MCP protocol tests (`core/mcp/*_test.go`) — covered under F-004. `OPEN:` whether any of the 490 test functions in this package require live provider credentials (none appeared to on inspection, but the full file set was not individually executed to confirm).
+Provider-specific test suites (`core/providers/*/*_test.go`) — covered under F-003. MCP protocol tests (`core/mcp/*_test.go`) — covered under F-004. 
+
+OPEN: whether any of the 490 test functions in this package require live provider credentials (none appeared to on inspection, but the full file set was not individually executed to confirm).

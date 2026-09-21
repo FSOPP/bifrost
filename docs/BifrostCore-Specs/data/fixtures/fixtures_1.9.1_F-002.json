@@ -1,5 +1,5 @@
 {
-  "$comment": "Fixture set for 1.9.1 F-002. NOTE: Key/BifrostChatRequest/BifrostChatResponse/BifrostError are not yet in schema/schemas.json $defs (shared file, pending the hub-level pass — see data-erd_1.9.1_F-002.md coordination note). route.py will reject this file as unknown-entity until that lands. IDs and timestamps are fixed literals — no randomness, no real data, no live keys.",
+  "$comment": "Fixture set for 1.9.1 F-002. Key/BifrostChatRequest/BifrostChatResponse/BifrostError are now declared in schema/schemas.json $defs (added in the hub-level pass). IDs and timestamps are fixed literals — no randomness, no real data, no live keys.",
   "Key": [
     {
       "ID": "key-fixture-001",
