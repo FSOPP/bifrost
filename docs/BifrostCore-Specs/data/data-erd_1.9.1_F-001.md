@@ -16,8 +16,8 @@ D: this is not a persisted data model — core/ has no database, no ORM, no migr
 
 | Entity | Own / Read / Write | Lifetime |
 | --- | --- | --- |
-| `ChannelMessage` | owns | one per queued request; acquired from `bifrost.channelMessagePool`, released via `releaseChannelMessage` [D: core/bifrost.go:8815, core/bifrost.go:8896] |
-| `ProviderQueue` | owns | one per configured provider; created in `prepareProvider`/`getProviderQueue`, lives until `RemoveProvider`/`UpdateProvider`/`Shutdown` drops the last reference [D: core/bifrost.go:4592, core/bifrost.go:4643] |
+| `ChannelMessage` | Owns | one per queued request; acquired from `bifrost.channelMessagePool`, released via `releaseChannelMessage` [D: core/bifrost.go:8815, core/bifrost.go:8896] |
+| `ProviderQueue` | Owns | one per configured provider; created in `prepareProvider`/`getProviderQueue`, lives until `RemoveProvider`/`UpdateProvider`/`Shutdown` drops the last reference [D: core/bifrost.go:4592, core/bifrost.go:4643] |
 | `schemas.BifrostRequest` | reads/writes | embedded by value inside `ChannelMessage`; pooled separately via `bifrostRequestPool` [D: core/bifrost.go:63, core/bifrost.go:8946-9008] |
 | `schemas.BifrostContext` | reads/writes | not owned by this feature (defined in core/schemas/context.go) but is the vehicle for every per-request value this layer sets (fallback index, request ID, retry count, routing engine log) [D: core/bifrost.go:5292-5296, core/bifrost.go:6259] |
 
@@ -29,17 +29,17 @@ See `schema/erd_1.9.1_F-001.puml` — a request-lifecycle diagram (ChannelMessag
 
 | Entity | Field | Type | Constraint | Nullable | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `ChannelMessage` | `schemas.BifrostRequest` (embedded) | struct | — | no | the request being carried [D: core/bifrost.go:63] |
+| `ChannelMessage` | `schemas.BifrostRequest` (embedded) | Struct | — | no | the request being carried [D: core/bifrost.go:63] |
 | `ChannelMessage` | `Context` | `*schemas.BifrostContext` | — | no (set immediately after acquire) | [D: core/bifrost.go:64, core/bifrost.go:5664] |
 | `ChannelMessage` | `Response` | `chan *schemas.BifrostResponse` | cap 1 | no | drained on acquire so a worker's send is always ready [D: core/bifrost.go:65, core/bifrost.go:70-72] |
 | `ChannelMessage` | `ResponseStream` | `chan chan *schemas.BifrostStreamChunk` | — | no | streaming path only [D: core/bifrost.go:66] |
 | `ChannelMessage` | `Err` | `chan schemas.BifrostError` | cap 1 | no | [D: core/bifrost.go:67] |
 | `ChannelMessage` | `queueSpan` | `schemas.SpanHandle` | — | yes (nil if tracer absent) | opened at enqueue, closed at dequeue or release [D: core/bifrost.go:68] |
 | `ChannelMessage` | `sentAt` | `time.Time` | — | zero value = unset | stamped by worker immediately before sending the result [D: core/bifrost.go:69] |
-| `ChannelMessage` | `handoff` | `atomic.Int32` (enum: open/claimed/abandoned) | CAS-guarded, exactly one winner | no | see DOM-001-core-engine.md for the invariant this enforces [D: core/bifrost.go:76, core/bifrost.go:79-83] |
-| `ProviderQueue` | `queue` | `chan *ChannelMessage` | never closed (see code comment rationale) | no | [D: core/bifrost.go:167] |
-| `ProviderQueue` | `done` | `chan struct{}` | closed exactly once via `signalOnce` | no | [D: core/bifrost.go:168, core/bifrost.go:170-195] |
-| `ProviderQueue` | `closing` | `uint32` (atomic 0/1) | — | no | [D: core/bifrost.go:169] |
+| `ChannelMessage` | `Handoff` | `atomic.Int32` (enum: open/claimed/abandoned) | CAS-guarded, exactly one winner | no | see DOM-001-core-engine.md for the invariant this enforces [D: core/bifrost.go:76, core/bifrost.go:79-83] |
+| `ProviderQueue` | `Queue` | `chan *ChannelMessage` | never closed | no | [D: core/bifrost.go:167] — I: a code comment at this line states a reason for never closing it; see the architecture doc's failure-modes section rather than restating the reason here |
+| `ProviderQueue` | `Done` | `chan struct{}` | closed exactly once via `signalOnce` | no | [D: core/bifrost.go:168, core/bifrost.go:170-195] |
+| `ProviderQueue` | `Closing` | `uint32` (atomic 0/1) | — | no | [D: core/bifrost.go:169] |
 
 ## New and changed entities
 

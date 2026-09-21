@@ -22,7 +22,7 @@ I: `core/schemas` has no persisted fixture files of its own (no `testdata/` dire
 
 ## Fixture file
 
-See `fixtures/fixtures_1.9.1_F-002.json`. `OPEN:` these records validate against the `Key`/`BifrostChatRequest`/`BifrostChatResponse`/`BifrostError` shapes as documented in `data-erd_1.9.1_F-002.md`, but `schema/schemas.json`'s `$defs` do not yet contain those entity names (shared file, out of this fork's write scope — see coordination note in the data-erd document). `route.py`'s fixture validation will not pass against the current shared `schemas.json` until that shared update lands.
+See `fixtures/fixtures_1.9.1_F-002.json`. These records validate against the `Key`/`BifrostChatRequest`/`BifrostChatResponse`/`BifrostError` shapes as documented in `data-erd_1.9.1_F-002.md` and now also in `schema/schemas.json`'s `$defs` (added in the hub-level pass — the earlier coordination gap is resolved).
 
 ## Encoded invariants
 
@@ -35,8 +35,12 @@ Fixed IDs (`"key-fixture-001"`, no UUID generation), no timestamps requiring `ti
 
 ## Loading
 
-`OPEN:` `core/schemas` has no fixture-loading harness — its own tests build literals directly in Go. This JSON file exists for the docs hub's `route.py` validation step, not for a Go test to load; no in-repo loader references it.
+`core/schemas` has no fixture-loading harness — its own tests build literals directly in Go. This JSON file exists for the docs hub's `route.py` validation step, not for a Go test to load; no in-repo loader references it.
+
+OPEN: should this hub convention (a JSON fixture file per feature) be adopted by the package's own tests, or kept purely as a docs artifact?
 
 ## Traceability
 
-F-002-TC (see `tests/test_1.9.1_F-002.md`) — the schemas package's own tests don't consume this file; it is a docs-hub artifact only. Flagged as an `OPEN:` gap between hub convention and how this particular package actually tests itself.
+F-002-TC (see `tests/test_1.9.1_F-002.md`) — the schemas package's own tests don't consume this file; it is a docs-hub artifact only. 
+
+OPEN: this is a gap between hub convention and how this particular package actually tests itself — is it worth reconciling?
