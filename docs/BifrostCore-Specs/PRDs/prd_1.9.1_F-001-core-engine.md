@@ -15,7 +15,7 @@ updated: 2026-09-21
 
 ## Summary
 
-I: Core Engine gives every caller of the Bifrost Go library a single request path — queue, retry, key rotation, fallback, plugin hooks — regardless of which of the ~60 request types or which of the 20+ providers is targeted, so provider-specific reliability logic is written once instead of per-integration. Business value, priority and target users beyond "a caller of the Bifrost library" are OPEN — not stated anywhere in core/.
+I: Core Engine gives every caller of the Bifrost Go library a single request path — queue, retry, key rotation, fallback, plugin hooks — regardless of which of the ~60 request types or which of the 20+ providers is targeted — basis: one `Provider` interface and one `ChannelMessage`/`ProviderQueue` pipeline handle all request types and providers uniformly, per `core/schemas/provider.go:681-800` and `core/bifrost.go`'s single dispatch path — so provider-specific reliability logic is written once instead of per-integration. Business value, priority and target users beyond "a caller of the Bifrost library" are OPEN — not stated anywhere in core/.
 
 ## User stories
 

@@ -22,7 +22,7 @@ updated: 2026-09-21
 | BifrostContext | Thread-safe mutable `context.Context` carrying request-scoped values via `SetValue`/`WithValue` [D: core/schemas/context.go:77-94] | "ctx" (fine in code, not in domain prose) |
 | Reserved key | A `BifrostContextKey` internal systems write (governance, retry, fallback, trace) that plugin code must never write directly [D: core/schemas/context.go:19-45] | "system key" |
 | Plugin hook | One of `PreLLMHook`/`PostLLMHook`/`PreMCPHook`/`PostMCPHook`/HTTP-transport hooks/`Inject` [D: core/schemas/plugin.go:213-477] | "middleware" (reserved for HTTP-layer usage elsewhere) |
-| Not-supported operation | A `Provider` method a given implementation cannot perform, returning a typed `*BifrostError` rather than omitting the method [D: providers/groq/groq.go:88-90] | "unimplemented" (implies missing, not a typed refusal) |
+| Not-supported operation | A `Provider` method a given implementation cannot perform, returning a typed `*BifrostError` rather than omitting the method [D: core/providers/groq/groq.go:88-90] | "unimplemented" (implies missing, not a typed refusal) |
 
 ## Actors
 
@@ -35,7 +35,7 @@ updated: 2026-09-21
 
 1. **DOM-001-R1** — A write to a reserved `BifrostContext` key is silently dropped when `blockRestrictedWrites` is set: no error is returned, no log is emitted on that path. [D: core/schemas/context.go:480-484]
 2. **DOM-001-R2** — A scoped (plugin-local) `BifrostContext` never stores its own values; every `SetValue` call recurses to the root context. [D: core/schemas/context.go:476-479]
-3. **DOM-001-R3** — Every `Provider` implementation must define a body for all 30+ interface methods; a method the target API cannot perform returns a typed `*BifrostError` ("not supported"), never a missing method or a panic. [D: core/schemas/provider.go:681-800; providers/groq/groq.go:88-90]
+3. **DOM-001-R3** — Every `Provider` implementation must define a body for all 30+ interface methods; a method the target API cannot perform returns a typed `*BifrostError` ("not supported"), never a missing method or a panic. [D: core/schemas/provider.go:681-800; core/providers/groq/groq.go:88-90]
 4. **DOM-001-R4** — Plugin hooks execute in a LIFO wrapping order: pre-hooks in registration order, post-hooks in reverse registration order, guaranteeing every executed pre-hook's matching post-hook also runs. [D: core/schemas/plugin.go:174-203]
 
 ## Process flow
@@ -57,7 +57,7 @@ D: a context value write (see `architect/feature_1.9.1_F-002_architect.md`'s Seq
 | --- | --- | --- |
 | DOM-001-R1 | wip — unverified, run `go test ./core/schemas/... -run TestBlockRestrictedWrites` (exact test name not confirmed by survey; a `context_test.go` exists per the F-002 fork's pass) | `core/schemas/context.go:480-484` |
 | DOM-001-R2 | wip — unverified, no dedicated test name surfaced in survey | `core/schemas/context.go:476-479` |
-| DOM-001-R3 | wip — unverified, run `go test ./core/providers/groq/...` | `providers/groq/groq.go:88-90` (one example provider) |
+| DOM-001-R3 | wip — unverified, run `go test ./core/providers/groq/...` | `core/providers/groq/groq.go:88-90` (one example provider) |
 | DOM-001-R4 | wip — unverified, no dedicated test name surfaced in survey for pipeline LIFO ordering specifically | `core/schemas/plugin.go:174-203` (doc comment, not a test) |
 
 None run in this session — `core/`'s test suite includes live-provider-API cases; not run unattended (see `tests/testing_strategy.md`).

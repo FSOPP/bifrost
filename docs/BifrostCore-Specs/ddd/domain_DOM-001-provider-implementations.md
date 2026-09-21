@@ -19,9 +19,9 @@ updated: 2026-09-21
 | Term | Definition | Aliases to avoid |
 | --- | --- | --- |
 | Full-converter provider | A provider package that owns its own request/response marshaling (anthropic, bedrock, gemini, vertex, cohere, …) [D: providers directory layout] | "native provider" |
-| Delegator provider | A provider package whose upstream API is OpenAI-wire-compatible and re-uses `openai.HandleOpenAI*` functions directly (groq, cerebras, ollama, perplexity, openrouter, parasail, nebius, xai, sgl) [D: providers/groq/groq.go:101-116] | "thin provider" |
-| Streaming client isolation | Each streaming request gets a client cloned via `providerUtils.BuildStreamingClient`, starting with empty reader/writer pools, so one non-idempotent stream-close can't poison another concurrent stream [D: providers/anthropic/anthropic.go:1514] | — |
-| Wire type | A provider-specific request/response struct (e.g. `AnthropicMessageRequest`, `BedrockConverseResponse`) distinct from Bifrost's own `Bifrost*Request`/`Bifrost*Response` types [D: providers/anthropic/chat.go:339; providers/bedrock/chat.go:14] | "DTO" (not used in this codebase's own vocabulary) |
+| Delegator provider | A provider package whose upstream API is OpenAI-wire-compatible and re-uses `openai.HandleOpenAI*` functions directly (groq, cerebras, ollama, perplexity, openrouter, parasail, nebius, xai, sgl) [D: core/providers/groq/groq.go:101-116] | "thin provider" |
+| Streaming client isolation | Each streaming request gets a client cloned via `providerUtils.BuildStreamingClient`, starting with empty reader/writer pools, so one non-idempotent stream-close can't poison another concurrent stream [D: core/providers/anthropic/anthropic.go:1514] | — |
+| Wire type | A provider-specific request/response struct (e.g. `AnthropicMessageRequest`, `BedrockConverseResponse`) distinct from Bifrost's own `Bifrost*Request`/`Bifrost*Response` types [D: core/providers/anthropic/chat.go:339; core/providers/bedrock/chat.go:14] | "DTO" (not used in this codebase's own vocabulary) |
 
 ## Actors
 
@@ -31,11 +31,11 @@ updated: 2026-09-21
 
 ## Business rules
 
-1. **DOM-001-R1** — Anthropic rejects a message whose content contains a document block with no accompanying text block; the converter inserts a placeholder text block ahead of time so the request never reaches Anthropic in the invalid shape. [D: providers/anthropic/chat.go:1052]
-2. **DOM-001-R2** — Anthropic's "adaptive" extended-thinking mode is rejected outright by legacy models (Opus 4.5/Haiku 4.5/Sonnet 4.5); Opus 4.6/Sonnet 4.6 accept both modes and `budget_tokens` still works. The sanitizer must not rewrite either case. [D: providers/anthropic/adaptivethinkingstrip_test.go:182]
-3. **DOM-001-R3** — Every streaming request uses a client cloned fresh per request (dialer/TLS/proxy preserved, reader/writer pools empty), because a non-idempotent streaming-body close can otherwise poison fasthttp's shared reader pool across concurrent streams on the same provider. [D: providers/anthropic/anthropic.go:1514]
-4. **DOM-001-R4** — A `Provider` method the target API cannot perform at all returns a one-line typed "not supported" `*BifrostError`, never a panic or a silently-missing method (e.g. Groq's `TextCompletion`/`Embedding`/`Rerank`/`OCR`, Anthropic's `Embedding`/`Speech`/`Transcription`). [D: providers/groq/groq.go:88,171,196,201; providers/anthropic/anthropic.go:2366,2371,2381]
-5. **DOM-001-R5** — Extended-thinking (reasoning) token count is always a subset of output/completion tokens: `ReasoningTokens <= CompletionTokens`; no separate folding step enforces this because the provider's own usage accounting already guarantees it. [D: providers/anthropic/chat.go:1357]
+1. **DOM-001-R1** — Anthropic rejects a message whose content contains a document block with no accompanying text block; the converter inserts a placeholder text block ahead of time so the request never reaches Anthropic in the invalid shape. [D: core/providers/anthropic/chat.go:1052]
+2. **DOM-001-R2** — Anthropic's "adaptive" extended-thinking mode is rejected outright by legacy models (Opus 4.5/Haiku 4.5/Sonnet 4.5); Opus 4.6/Sonnet 4.6 accept both modes and `budget_tokens` still works. The sanitizer must not rewrite either case. [D: core/providers/anthropic/adaptivethinkingstrip_test.go:182]
+3. **DOM-001-R3** — Every streaming request uses a client cloned fresh per request (dialer/TLS/proxy preserved, reader/writer pools empty), because a non-idempotent streaming-body close can otherwise poison fasthttp's shared reader pool across concurrent streams on the same provider. [D: core/providers/anthropic/anthropic.go:1514]
+4. **DOM-001-R4** — A `Provider` method the target API cannot perform at all returns a one-line typed "not supported" `*BifrostError`, never a panic or a silently-missing method (e.g. Groq's `TextCompletion`/`Embedding`/`Rerank`/`OCR`, Anthropic's `Embedding`/`Speech`/`Transcription`). [D: core/providers/groq/groq.go:88,171,196,201; core/providers/anthropic/anthropic.go:2366,2371,2381]
+5. **DOM-001-R5** — Extended-thinking (reasoning) token count is always a subset of output/completion tokens: `ReasoningTokens <= CompletionTokens`; no separate folding step enforces this because the provider's own usage accounting already guarantees it. [D: core/providers/anthropic/chat.go:1357]
 
 ## Process flow
 
@@ -57,11 +57,11 @@ Delegator path (Groq and 8 others): step 2-4 above do not exist in the delegator
 
 | Rule | Status | Evidence |
 | --- | --- | --- |
-| DOM-001-R1 | wip — unverified, no dedicated test name surfaced beyond the code comment | `providers/anthropic/chat.go:1052` |
-| DOM-001-R2 | wip — unverified, run `go test ./core/providers/anthropic/... -run TestAdaptiveThinkingStrip` | `providers/anthropic/adaptivethinkingstrip_test.go:182` |
-| DOM-001-R3 | wip — unverified, no dedicated test name surfaced beyond the code comment | `providers/anthropic/anthropic.go:1514` |
-| DOM-001-R4 | wip — unverified, run `go test ./core/providers/groq/...` and `./core/providers/anthropic/...` | `providers/groq/groq.go:88,171,196,201` |
-| DOM-001-R5 | wip — unverified, no dedicated test name surfaced beyond the code comment | `providers/anthropic/chat.go:1357` |
+| DOM-001-R1 | wip — unverified, no dedicated test name surfaced beyond the code comment | `core/providers/anthropic/chat.go:1052` |
+| DOM-001-R2 | wip — unverified, run `go test ./core/providers/anthropic/... -run TestAdaptiveThinkingStrip` | `core/providers/anthropic/adaptivethinkingstrip_test.go:182` |
+| DOM-001-R3 | wip — unverified, no dedicated test name surfaced beyond the code comment | `core/providers/anthropic/anthropic.go:1514` |
+| DOM-001-R4 | wip — unverified, run `go test ./core/providers/groq/...` and `./core/providers/anthropic/...` | `core/providers/groq/groq.go:88,171,196,201` |
+| DOM-001-R5 | wip — unverified, no dedicated test name surfaced beyond the code comment | `core/providers/anthropic/chat.go:1357` |
 
 None run in this session — `core/`'s provider tests hit live third-party APIs per AGENTS.md; not run unattended.
 

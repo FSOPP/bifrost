@@ -16,19 +16,21 @@ No JSON/YAML fixture files exist under `core/mcp` — tests build `schemas.MCPCl
 
 | Set ID | Entities | Scenario | Test cases |
 | --- | --- | --- | --- |
-| F-004-FX1 | Tool with `Annotations{ReadOnlyHint:false, DestructiveHint:true, IdempotentHint:false}` | Destructive + non-idempotent → retry skipped | `TestExecuteTool_AuthFailureRetry_*_SkipsRetry` [D: mcp/auth_retry_test.go:811, 875] |
-| F-004-FX2 | Tool with `Annotations{DestructiveHint:true, IdempotentHint:true}` | Destructive but idempotent → retry still runs | `TestExecuteTool_AuthFailureRetry_DestructiveButIdempotent_StillRetries` [D: mcp/auth_retry_test.go:846] |
-| F-004-FX3 | Tool with `Annotations: nil` | No hints at all → fail-closed, treated as destructive+non-idempotent | `TestExecuteTool_AuthFailureRetry_NoAnnotations_SkipsRetry` [D: mcp/auth_retry_test.go:875] |
-| F-004-FX4 | `MCPClientState{ExecutionConfig.AuthType: per_user_oauth / per_user_headers}` | Per-user-auth clients hold no shared connection — rotation must be a no-op, not an error | `TestCloseAndMarkNeedsReauth_PerUserAuth_ReturnsNotApplicable` [D: mcp/clientmanager_test.go:192] |
-| F-004-FX5 | `MCPClientState{State: Disabled}` racing a rotation call | `DisableClient` state must win over an in-flight rotation | `TestCloseAndMarkNeedsReauth_Disabled_IsNoOp` [D: mcp/clientmanager_test.go:223] |
+| F-004-FX1 | Tool with `Annotations{ReadOnlyHint:false, DestructiveHint:true, IdempotentHint:false}` | Destructive + non-idempotent → retry skipped | `TestExecuteTool_AuthFailureRetry_*_SkipsRetry` [D: core/mcp/auth_retry_test.go:811, 875] |
+| F-004-FX2 | Tool with `Annotations{DestructiveHint:true, IdempotentHint:true}` | Destructive but idempotent → retry still runs | `TestExecuteTool_AuthFailureRetry_DestructiveButIdempotent_StillRetries` [D: core/mcp/auth_retry_test.go:846] |
+| F-004-FX3 | Tool with `Annotations: nil` | No hints at all → fail-closed, treated as destructive+non-idempotent | `TestExecuteTool_AuthFailureRetry_NoAnnotations_SkipsRetry` [D: core/mcp/auth_retry_test.go:875] |
+| F-004-FX4 | `MCPClientState{ExecutionConfig.AuthType: per_user_oauth / per_user_headers}` | Per-user-auth clients hold no shared connection — rotation must be a no-op, not an error | `TestCloseAndMarkNeedsReauth_PerUserAuth_ReturnsNotApplicable` [D: core/mcp/clientmanager_test.go:192] |
+| F-004-FX5 | `MCPClientState{State: Disabled}` racing a rotation call | `DisableClient` state must win over an in-flight rotation | `TestCloseAndMarkNeedsReauth_Disabled_IsNoOp` [D: core/mcp/clientmanager_test.go:223] |
 
 ## Fixture file
 
-`fixtures/fixtures_1.9.1_F-004.json` is left as the scaffold's empty stub — there is no external fixture file to mirror. OPEN: should this hub instead capture the Go-literal shapes above as a JSON fixture file for cross-tool reuse, or is inline-per-test the intended convention here?
+`fixtures/fixtures_1.9.1_F-004.json` is left as the scaffold's empty stub — there is no external fixture file to mirror.
+
+OPEN: should this hub instead capture the Go-literal shapes above as a JSON fixture file for cross-tool reuse, or is inline-per-test the intended convention here?
 
 ## Encoded invariants
 
-The FX1–FX3 set exists specifically to exercise the fail-closed default: MCP annotations are optional per spec, so an unannotated tool is the common case, and the test suite deliberately proves that common case is *not* treated as safe-to-retry [D: mcp/toolmanager.go:835-841].
+The FX1–FX3 set exists specifically to exercise the fail-closed default: MCP annotations are optional per spec, so an unannotated tool is the common case, and the test suite proves that common case is *not* treated as safe-to-retry [D: core/mcp/toolmanager.go:835-841].
 
 ## Determinism rules
 

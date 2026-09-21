@@ -23,13 +23,13 @@ updated: 2026-09-21
 
 ## Test cases
 
-- **F-004-TC1** — `TestExecuteTool_AuthFailureRetry_DestructiveNonIdempotent_SkipsRetry`: destructive+non-idempotent tool, auth-shaped failure → original error surfaces unchanged, no recovery machinery runs [D: mcp/auth_retry_test.go:811].
-- **F-004-TC2** — `TestExecuteTool_AuthFailureRetry_Shared_DestructiveNonIdempotent_ReconnectsWithoutRetry`: same tool shape on the shared-connection path → background force-refresh + reconnect still runs, only the retry is skipped [D: mcp/auth_retry_test.go:689].
-- **F-004-TC3** — `TestExecuteTool_AuthFailureRetry_DestructiveButIdempotent_StillRetries`: destructive AND idempotent → retry proceeds (repeated calls have no additional effect) [D: mcp/auth_retry_test.go:846].
-- **F-004-TC3b** — `TestExecuteTool_AuthFailureRetry_NoAnnotations_SkipsRetry`: no `Annotations` at all → fail-closed, same as explicitly destructive+non-idempotent [D: mcp/auth_retry_test.go:875].
-- **F-004-TC4** — `TestCloseAndMarkNeedsReauth_PerUserAuth_ReturnsNotApplicable`: per-user-auth clients (no shared connection) → rotation must not error the caller and must not touch entry state [D: mcp/clientmanager_test.go:192].
-- **F-004-TC5** — `TestCloseAndMarkNeedsReauth_Disabled_IsNoOp`: rotation racing a disable → `DisableClient`'s state is authoritative [D: mcp/clientmanager_test.go:223].
-- **F-004-TC6** — Starlark codemode conversion suite (`Convert Bool/Dict/Float/Int/List/String/None`, `Convert map/nil/int/float64/bool`) — value marshaling correctness between Go and Starlark [D: mcp/codemode/starlark/starlark_test.go:65-186].
+- **F-004-TC1** — `TestExecuteTool_AuthFailureRetry_DestructiveNonIdempotent_SkipsRetry`: destructive+non-idempotent tool, auth-shaped failure → original error surfaces unchanged, no recovery machinery runs [D: core/mcp/auth_retry_test.go:811].
+- **F-004-TC2** — `TestExecuteTool_AuthFailureRetry_Shared_DestructiveNonIdempotent_ReconnectsWithoutRetry`: same tool shape on the shared-connection path → background force-refresh + reconnect still runs, only the retry is skipped [D: core/mcp/auth_retry_test.go:689].
+- **F-004-TC3** — `TestExecuteTool_AuthFailureRetry_DestructiveButIdempotent_StillRetries`: destructive AND idempotent → retry proceeds (repeated calls have no additional effect) [D: core/mcp/auth_retry_test.go:846].
+- **F-004-TC3b** — `TestExecuteTool_AuthFailureRetry_NoAnnotations_SkipsRetry`: no `Annotations` at all → fail-closed, same as explicitly destructive+non-idempotent [D: core/mcp/auth_retry_test.go:875].
+- **F-004-TC4** — `TestCloseAndMarkNeedsReauth_PerUserAuth_ReturnsNotApplicable`: per-user-auth clients (no shared connection) → rotation must not error the caller and must not touch entry state [D: core/mcp/clientmanager_test.go:192].
+- **F-004-TC5** — `TestCloseAndMarkNeedsReauth_Disabled_IsNoOp`: rotation racing a disable → `DisableClient`'s state is authoritative [D: core/mcp/clientmanager_test.go:223].
+- **F-004-TC6** — Starlark codemode conversion suite (`Convert Bool/Dict/Float/Int/List/String/None`, `Convert map/nil/int/float64/bool`) — value marshaling correctness between Go and Starlark [D: core/mcp/codemode/starlark/starlark_test.go:65-186].
 
 ## Implementation status
 
@@ -47,8 +47,10 @@ updated: 2026-09-21
 
 - Missing annotations entirely (F-004-TC3b) — the fail-closed default.
 - Reconnect racing a disable (F-004-TC5) — ordering/authority conflict, not a value-boundary case.
-- Caller cancellation vs. deadline expiry during a reconnect wait — comment-stated at `mcp/toolmanager.go:962` but **no test case name was found citing it in survey.md's test list**; this is a coverage hole, not a covered edge case. OPEN: is this behavior actually tested anywhere, under a name the survey's regex heuristic missed?
+- Caller cancellation vs. deadline expiry during a reconnect wait — comment-stated at `core/mcp/toolmanager.go:962` but **no test case name was found citing it in survey.md's test list**; this is a coverage hole, not a covered edge case.
+
+OPEN: is this behavior actually tested anywhere, under a name the survey's regex heuristic missed?
 
 ## Out of scope
 
-Agent-loop parallel tool execution and the depth-cap loop itself (`agent.go`) have their own test file `mcp/agent_test.go`, not enumerated here — this test plan focuses on the auth-retry opt-out and connection-rotation cases survey.md's constraint scan surfaced as rule-likeness ≥6. A follow-up pass should walk `agent_test.go` directly for full agent-loop coverage.
+Agent-loop parallel tool execution and the depth-cap loop itself (`agent.go`) have their own test file `core/mcp/agent_test.go`, not enumerated here — this test plan focuses on the auth-retry opt-out and connection-rotation cases survey.md's constraint scan surfaced as rule-likeness ≥6. A follow-up pass should walk `agent_test.go` directly for full agent-loop coverage.

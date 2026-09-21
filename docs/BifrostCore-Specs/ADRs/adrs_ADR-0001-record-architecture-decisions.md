@@ -18,7 +18,7 @@ Accepted (reconstructed from reversal, 2026-09-21) — rationale not recovered; 
 
 ## Context
 
-`core/` (the `github.com/maximhq/bifrost/core` module [D: core/go.mod:1]) has no in-repo ADR log prior to this reversed hub: the survey found `core/changelog.md` as the only in-repo document [D: survey "In-repo documents"], and several architecturally consequential choices are visible in code with no recorded reasoning nearby — e.g. the per-request cloned streaming `fasthttp` client [D: providers/anthropic/anthropic.go:1514] and the fail-soft-once encrypted-content strip [D: core/bifrost.go:6255].
+`core/` (the `github.com/maximhq/bifrost/core` module [D: core/go.mod:1]) has no in-repo ADR log prior to this reversed hub: the survey found `core/changelog.md` as the only in-repo document [D: survey "In-repo documents"], and several architecturally consequential choices are visible in code with no recorded reasoning nearby — e.g. the per-request cloned streaming `fasthttp` client [D: core/providers/anthropic/anthropic.go:1514] and the fail-soft-once encrypted-content strip [D: core/bifrost.go:6255].
 
 ## Decision
 

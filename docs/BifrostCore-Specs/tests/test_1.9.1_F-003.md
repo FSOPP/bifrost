@@ -43,7 +43,7 @@ This is a sample of 4385 total test cases across 454 files in `core/` [D: revers
 ## Edge and negative cases
 
 - Groq (delegator): calling any of the ~41 "not supported" methods — [D: core/providers/groq/groq.go, e.g. TextCompletion at groq.go:88] — no test citation found confirming the returned error shape for the unsupported path in this pass; see coverage holes below.
-- Anthropic: a request that both signs incorrectly (auth failure) and carries `encrypted_content` — must not be confused with the encrypted-content strip-and-retry path [D: core/encryptedreasoning_test.go:852, though this file sits at `core/`, not `core/providers/`, and is F-001's territory — cited here only because it directly bounds an Anthropic-specific failure mode].
+- Anthropic: a request that both signs incorrectly (auth failure) and carries `encrypted_content` — must not be confused with the encrypted-content strip-and-retry path [D: core/encryptedreasoning_test.go:852 — note: this file sits at `core/`, not `core/providers/`, and is F-001's territory; cited here as the boundary case for an Anthropic-specific failure mode].
 
 ## Out of scope
 

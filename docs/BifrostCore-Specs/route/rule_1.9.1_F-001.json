@@ -21,10 +21,10 @@
     ],
     "data": [
       "docs/BifrostCore-Specs/data/data-master-erd.md",
+      "docs/BifrostCore-Specs/data/schema/schemas.json",
       "docs/BifrostCore-Specs/data/data-erd_1.9.1_F-001.md",
       "docs/BifrostCore-Specs/data/api-contract_1.9.1_F-001.md",
       "docs/BifrostCore-Specs/data/data-fixtures_1.9.1_F-001.md",
-      "docs/BifrostCore-Specs/data/schema/schemas.json",
       "docs/BifrostCore-Specs/data/schema/erd_1.9.1_F-001.puml",
       "docs/BifrostCore-Specs/data/schema/openapi_1.9.1_F-001.json",
       "docs/BifrostCore-Specs/data/schema/asyncapi_1.9.1_F-001.json",
