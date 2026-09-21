@@ -1,0 +1,66 @@
+@startuml erd_1.9.1_F-002
+' Feature ERD — 1.9.1 F-002 Provider Abstraction.
+' Shows only the entities this feature reads or writes, with the fields it
+' depends on. Names must match erd_master.puml and schemas.json exactly; an
+' entity that appears here and nowhere else is a defect, not a shortcut.
+hide circle
+skinparam linetype ortho
+
+' In-memory Go type contract, not a persisted schema — no PK/FK, no migrations.
+' See data-erd_1.9.1_F-002.md "Field definitions" for citations per field.
+
+entity "Key" as key {
+  * ID : string
+  --
+  Name : string
+  Value : SecretVar
+  Weight : float64
+  Enabled : *bool
+}
+
+entity "ProviderConfig" as providerconfig {
+  * NetworkConfig : NetworkConfig
+  --
+  ConcurrencyAndBufferSize : ConcurrencyAndBufferSize
+  ProxyConfig : *ProxyConfig
+  CustomProviderConfig : *CustomProviderConfig
+}
+
+entity "NetworkConfig" as networkconfig {
+  * BaseURL : string
+  --
+  RetryBackoffInitial : time.Duration
+  RetryBackoffMax : time.Duration
+  MaxConnsPerHost : int
+}
+
+entity "BifrostChatRequest" as chatrequest {
+  * Provider : ModelProvider
+  * Model : string
+  --
+  Input : []ChatMessage
+  Params : *ChatParameters
+  Fallbacks : []Fallback
+}
+
+entity "BifrostChatResponse" as chatresponse {
+  * ID : string
+  --
+  Choices : []BifrostResponseChoice
+  Usage : *BifrostLLMUsage
+  ExtraFields : BifrostResponseExtraFields
+}
+
+entity "BifrostError" as bifrosterror {
+  * IsBifrostError : bool
+  --
+  Error : *ErrorField
+  ExtraFields : BifrostErrorExtraFields
+}
+
+providerconfig ||--|| networkconfig : embeds
+chatrequest ..> chatresponse : "Provider.ChatCompletion() returns"
+chatrequest ..> bifrosterror : "or returns"
+key ..> providerconfig : "selected against"
+
+@enduml

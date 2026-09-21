@@ -1,0 +1,60 @@
+@startuml erd_master
+' Master ERD — BifrostCore.
+' Type-contract registry (no database — core/ is stateless). Every entity any
+' feature owns is introduced here exactly once, matching schemas.json $defs
+' keys. Citations: see data-master-erd.md.
+hide circle
+skinparam linetype ortho
+
+package "F-001 Core Engine" {
+  entity "ChannelMessage" as ChannelMessage {
+    * pooled : true
+    --
+    request : BifrostRequest
+  }
+  entity "Fallback" as Fallback {
+    provider : string
+    model : string
+  }
+}
+
+package "F-002 Provider Abstraction" {
+  entity "BifrostContext" as BifrostContext {
+    * keys : BifrostContextKey -> any
+  }
+  entity "NetworkConfig" as NetworkConfig
+  entity "ProviderConfig" as ProviderConfig
+  entity "PluginConfig" as PluginConfig
+  entity "BifrostRequest" as BifrostRequest
+  entity "BifrostResponse" as BifrostResponse
+  entity "BifrostStreamChunk" as BifrostStreamChunk
+  entity "BifrostError" as BifrostError
+  entity "BifrostChatRequest" as BifrostChatRequest
+  entity "BifrostChatResponse" as BifrostChatResponse
+  entity "ChatMessage" as ChatMessage
+  entity "ChatTool" as ChatTool
+  entity "BifrostLLMUsage" as BifrostLLMUsage
+  entity "BifrostCost" as BifrostCost
+}
+
+package "F-004 MCP Integration" {
+  entity "MCPClientEntry" as MCPClientEntry {
+    * state : Disconnected|Connected
+  }
+}
+
+ChannelMessage ||--|| BifrostRequest : embeds
+BifrostRequest ||--o{ Fallback : configures
+BifrostRequest ||--o{ ChatMessage : contains
+BifrostChatRequest ||--o{ ChatMessage : contains
+BifrostChatRequest ||--o{ ChatTool : offers
+BifrostResponse ||--o| BifrostLLMUsage : reports
+BifrostResponse ||--o| BifrostCost : reports
+BifrostResponse ||--o| BifrostError : "or"
+BifrostChatResponse ||--o| BifrostLLMUsage : reports
+ChatTool ||--o| MCPClientEntry : "sourced from (F-004)"
+BifrostContext ..> ChannelMessage : "scopes (not embedded — see AGENTS.md ctx-size rule, OPEN: independently unverified)"
+' NetworkConfig / ProviderConfig / PluginConfig / BifrostStreamChunk are
+' config/streaming siblings referenced from BifrostRequest/Response but not
+' field-level expanded at master level — see per-feature data-erd_*.md.
+@enduml

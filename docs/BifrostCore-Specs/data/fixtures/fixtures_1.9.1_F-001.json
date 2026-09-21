@@ -1,0 +1,9 @@
+{
+  "$comment": "Fixture set for 1.9.1 F-001. Every top-level key is an entity name in schemas.json $defs; its value is an array of records. route.py rejects an unknown entity, a missing required field or an undeclared field. Keys starting with $ are ignored. IDs and timestamps are fixed literals — no randomness, no real data. F-001 owns no persisted entity (see data-erd_1.9.1_F-001.md) — this is a minimal illustrative record for the one pooled in-flight type registered in schemas.json's $defs, not a real fixture set.",
+  "ChannelMessage": [
+    {
+      "handoff": "open",
+      "sentAt": "0001-01-01T00:00:00Z"
+    }
+  ]
+}

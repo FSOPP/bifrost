@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bifrostcore/data/schemas.json",
+  "title": "BifrostCore data model",
+  "description": "Type-contract registry, not a persistence schema — core/ has no database (survey found zero DDL/ORM/migration evidence). Shapes here mirror core/schemas/*.go Go structs and are cited path:line in data-master-erd.md. erd_master.puml draws these entities.",
+  "$defs": {
+    "ChannelMessage": {
+      "type": "object",
+      "description": "Pooled per-request unit that travels through a provider's queue/worker channel. Owned by: F-001 Core Engine. Introduced by: F-001. [D: core/bifrost.go:62]",
+      "additionalProperties": true
+    },
+    "Fallback": {
+      "type": "object",
+      "description": "A named next-provider/model pair a request retries against on failure. Owned by: F-001. Introduced by: F-001. [D: core/schemas/bifrost.go:553]",
+      "additionalProperties": true
+    },
+    "BifrostContext": {
+      "type": "object",
+      "description": "Custom mutable context.Context carrying request-scoped keys (governance, retry, trace/span, virtual key). Owned by: F-002. Introduced by: F-002. [D: core/schemas/context.go:77]",
+      "additionalProperties": true
+    },
+    "NetworkConfig": {
+      "type": "object",
+      "description": "Per-provider network client configuration. Owned by: F-002. Introduced by: F-002. [D: core/schemas/provider.go:60]",
+      "additionalProperties": true
+    },
+    "ProviderConfig": {
+      "type": "object",
+      "description": "Per-provider configuration wrapper. Owned by: F-002. Introduced by: F-002. [D: core/schemas/provider.go:556]",
+      "additionalProperties": true
+    },
+    "PluginConfig": {
+      "type": "object",
+      "description": "Plugin registration/config shape. Owned by: F-002. Introduced by: F-002. [D: core/schemas/plugin.go:401]",
+      "additionalProperties": true
+    },
+    "BifrostRequest": {
+      "type": "object",
+      "description": "Top-level request envelope covering all 30+ operation types. Owned by: F-002 (shape) / F-001 (routes it). Introduced by: F-002. [D: core/schemas/bifrost.go:571]",
+      "additionalProperties": true
+    },
+    "BifrostResponse": {
+      "type": "object",
+      "description": "Top-level response envelope. Owned by: F-002. Introduced by: F-002. [D: core/schemas/bifrost.go:1125]",
+      "additionalProperties": true
+    },
+    "BifrostStreamChunk": {
+      "type": "object",
+      "description": "One chunk of a streamed response. Owned by: F-002. Introduced by: F-002. [D: core/schemas/bifrost.go:1913]",
+      "additionalProperties": true
+    },
+    "BifrostError": {
+      "type": "object",
+      "description": "Normalized error envelope with provider/model/request-type metadata. Owned by: F-002. Introduced by: F-002. [D: core/schemas/bifrost.go:1954]",
+      "additionalProperties": true
+    },
+    "BifrostChatRequest": {
+      "type": "object",
+      "description": "Chat completion request shape. Owned by: F-002 (canonical shape) / converted per-provider in F-003. Introduced by: F-002. [D: core/schemas/chatcompletions.go:14]",
+      "additionalProperties": true
+    },
+    "BifrostChatResponse": {
+      "type": "object",
+      "description": "Chat completion response shape. Owned by: F-002. Introduced by: F-002. [D: core/schemas/chatcompletions.go:36]",
+      "additionalProperties": true
+    },
+    "ChatMessage": {
+      "type": "object",
+      "description": "A single message in a chat conversation. Owned by: F-002. Introduced by: F-002. [D: core/schemas/chatcompletions.go:1100]",
+      "additionalProperties": true
+    },
+    "ChatTool": {
+      "type": "object",
+      "description": "A tool/function definition exposed to the model, including MCP tool annotations. Owned by: F-002 (shape) / F-004 (MCP-sourced tools). Introduced by: F-002. [D: core/schemas/chatcompletions.go:418]",
+      "additionalProperties": true
+    },
+    "BifrostLLMUsage": {
+      "type": "object",
+      "description": "Token usage accounting, including reasoning-token breakdown. Owned by: F-002. Introduced by: F-002. [D: core/schemas/chatcompletions.go:1925]",
+      "additionalProperties": true
+    },
+    "BifrostCost": {
+      "type": "object",
+      "description": "Cost accounting for a request. Owned by: F-002. Introduced by: F-002. [D: core/schemas/chatcompletions.go:2050]",
+      "additionalProperties": true
+    },
+    "MCPClientEntry": {
+      "type": "object",
+      "description": "An MCP client's connection-state record (Disconnected/Connected). Owned by: F-004. Introduced by: F-004. [D: core/mcp/clientmanager.go:2090]",
+      "additionalProperties": true
+    }
+  }
+}
