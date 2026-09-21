@@ -16,7 +16,7 @@ D: `core/` has 454 test files totalling 4,385 test cases [D: survey "Tests" — 
 | Level | Scope | Tool | Who owns | When it runs |
 | --- | --- | --- | --- | --- |
 | Unit | Converter functions, schema validation, retry/rotation logic | `go test` (standard library) | Per-package `*_test.go` | Local + CI (I: CI wiring not independently re-verified in `core/`'s own config — none found scoped to `core/`; repo-wide `.github/workflows/` exists per repowise's tree but wasn't cited line-by-line here) |
-| Provider scenario ("llmtests") | End-to-end behaviour against **live provider APIs**, dual Chat-Completions + Responses API | `make test-core` [I: basis — AGENTS.md's stated command, not `core/`-internal] | `core/internal/llmtests/` (65 files per repowise module count) | Opt-in, requires provider API keys (survey lists 40+ secret-shaped env vars, e.g. `OPENAI_API_KEY` at `providers/openai/openai_test.go:15`) |
+| Provider scenario ("llmtests") | End-to-end behaviour against **live provider APIs**, dual Chat-Completions + Responses API | `make test-core` [I: basis — AGENTS.md's stated command, not `core/`-internal] | `core/internal/llmtests/` (65 files per repowise module count) | Opt-in, requires provider API keys (survey lists 40+ secret-shaped env vars, e.g. `OPENAI_API_KEY` at `core/providers/openai/openai_test.go:15`) |
 | MCP/agent (mock-based) | Agent loop, tool/client lifecycle, no live APIs | `make test-mcp` [I: same basis] | `core/internal/mcptests/` | Local + CI, no credentials needed |
 | Provider harness | Wire-level, HTTP-visible behaviour | `make run-provider-harness-test` | `tests/e2e/api/collections/` — **outside `core/`**, since `core/` has no HTTP surface (survey: 0 endpoints) | Not applicable to `core/` in isolation |
 

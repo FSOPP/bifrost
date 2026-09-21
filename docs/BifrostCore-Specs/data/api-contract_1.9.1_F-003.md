@@ -22,7 +22,7 @@ None (inbound). N/A.
 
 ## Events
 
-None found — [D: reverse.py survey, core/, events section lists only unused declared message-type constants unrelated to this feature, e.g. `schemas/mcp.go:56`, `schemas/oauth.go:119,124`, none referenced from `core/providers/`].
+None found — [D: reverse.py survey, core/, events section lists only unused declared message-type constants unrelated to this feature, e.g. `core/schemas/mcp.go:56`, `core/schemas/oauth.go:119,124`, none referenced from `core/providers/`].
 
 ## Error model
 

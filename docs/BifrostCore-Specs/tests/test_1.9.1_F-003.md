@@ -38,7 +38,16 @@ This is a sample of 4385 total test cases across 454 files in `core/` [D: revers
 
 | Test case | Status | Evidence |
 | --- | --- | --- |
-| F-003-TC1..TC8 | wip — unverified, run `make test-core PROVIDER=<name>` | Code and test functions exist and are cited above; not executed in this pass. `make test-core` hits **live provider APIs** per AGENTS.md's Testing section, so it was not run without the user's explicit go-ahead. |
+| F-003-TC1 | wip — unverified, run `make test-core PROVIDER=anthropic` | `core/providers/anthropic/anthropic_test.go:82` |
+| F-003-TC2 | wip — unverified, run `make test-core PROVIDER=azure` | `core/providers/azure/azure_test.go:108,244,262,327` |
+| F-003-TC3 | wip — unverified, run `make test-core PROVIDER=bedrock` | `core/providers/bedrock/bedrock_test.go:250,280`, `core/providers/bedrockmantle/bedrockmantle_test.go:104` |
+| F-003-TC4 | wip — unverified, run `make test-core PROVIDER=bedrock` | `core/providers/bedrock/bedrock_test.go:4446,4380,4511` |
+| F-003-TC5 | wip — unverified, run `make test-core PROVIDER=bedrock` | `core/providers/bedrock/s3locationmodelgate_test.go:89,100,149,171,413` |
+| F-003-TC6 | wip — unverified, no dedicated test name surfaced beyond the code comment | `core/providers/anthropic/chat.go:1052` |
+| F-003-TC7 | wip — unverified, run `make test-core PROVIDER=anthropic -run TestAdaptiveThinkingStrip` | `core/providers/anthropic/adaptivethinkingstrip_test.go:182` |
+| F-003-TC8 | wip — unverified, run `make test-core PROVIDER=cerebras` and `PROVIDER=cohere` | `core/providers/cerebras/cerebras_test.go:57`, `core/providers/cohere/cohere_test.go:59` |
+
+`make test-core` hits **live provider APIs** per AGENTS.md's Testing section, so none of the above was run without the user's explicit go-ahead.
 
 ## Edge and negative cases
 
