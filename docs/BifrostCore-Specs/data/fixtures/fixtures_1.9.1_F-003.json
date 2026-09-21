@@ -1,0 +1,3 @@
+{
+  "$comment": "No entity fixtures for 1.9.1 F-003 — core/providers/ persists nothing (see data-erd_1.9.1_F-003.md Scope). Left empty rather than filled with an invented example_entity record. The feature's real test data is the provider packages' own Go test fixtures, catalogued in data-fixtures_1.9.1_F-003.md."
+}

@@ -1,0 +1,10 @@
+@startuml erd_1.9.1_F-003
+' Feature ERD — 1.9.1 F-003 Provider Implementations.
+' No entities: core/providers/ persists nothing (no database in core/ at all —
+' see data-erd_1.9.1_F-003.md Scope). It transforms transient in-memory wire
+' structs (per-provider request/response types) that are not domain entities.
+' Left intentionally empty rather than filled with an invented shape.
+hide circle
+skinparam linetype ortho
+
+@enduml

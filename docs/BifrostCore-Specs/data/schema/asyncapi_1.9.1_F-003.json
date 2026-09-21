@@ -1,0 +1,11 @@
+{
+  "asyncapi": "3.0.0",
+  "info": {
+    "title": "BifrostCore — F-003 Provider Implementations events",
+    "version": "1.9.1",
+    "description": "Asynchronous surface of F-003. Payloads are $ref'd from schemas.json. A feature with no events leaves channels and operations empty — an empty file is a stated fact, not an omission."
+  },
+  "channels": {},
+  "operations": {},
+  "components": { "schemas": {} }
+}

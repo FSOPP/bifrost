@@ -1,0 +1,14 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "BifrostCore — F-003 Provider Implementations",
+    "version": "1.9.1",
+    "description": "Synchronous surface of F-003. Shapes are $ref'd from schemas.json; do not inline an entity definition here. A product standardised on OpenAPI 2.0 replaces this file wholesale and keeps the same $ref discipline."
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "ExampleEntity": { "$ref": "schemas.json#/$defs/example_entity" }
+    }
+  }
+}

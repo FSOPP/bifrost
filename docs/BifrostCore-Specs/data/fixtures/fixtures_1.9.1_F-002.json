@@ -1,0 +1,33 @@
+{
+  "$comment": "Fixture set for 1.9.1 F-002. NOTE: Key/BifrostChatRequest/BifrostChatResponse/BifrostError are not yet in schema/schemas.json $defs (shared file, pending the hub-level pass — see data-erd_1.9.1_F-002.md coordination note). route.py will reject this file as unknown-entity until that lands. IDs and timestamps are fixed literals — no randomness, no real data, no live keys.",
+  "Key": [
+    {
+      "ID": "key-fixture-001",
+      "Name": "fixture-minimal-key",
+      "Weight": 1.0,
+      "Enabled": true
+    }
+  ],
+  "BifrostChatRequest": [
+    {
+      "Provider": "openai",
+      "Model": "gpt-4o-mini",
+      "Input": []
+    }
+  ],
+  "BifrostChatResponse": [
+    {
+      "ID": "chatcmpl-fixture-001",
+      "Created": 1704067200,
+      "Model": "gpt-4o-mini",
+      "Object": "chat.completion",
+      "SystemFingerprint": "fixture"
+    }
+  ],
+  "BifrostError": [
+    {
+      "IsBifrostError": true,
+      "Error": { "Message": "operation not supported: text completion by groq" }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "$comment": "Fixture set for 1.9.1 F-004. Every top-level key is an entity name in schemas.json $defs; its value is an array of records. route.py rejects an unknown entity, a missing required field or an undeclared field. Keys starting with $ are ignored. IDs and timestamps are fixed literals — no randomness, no real data.",
+  "example_entity": [
+    {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  ]
+}
