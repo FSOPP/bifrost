@@ -44,8 +44,8 @@ OPEN: no lint config, no complexity/size limit, no formatter config was found sc
 ## Security baseline
 
 D: 47 distinct provider API-key-shaped env vars are read across `core/providers/*_test.go` (e.g. `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `AWS_SECRET_ACCESS_KEY`) [D: survey "Configuration keys" — full list, secret-shaped entries flagged]. None of these values are recorded anywhere in this hub, by the skill's own rule.
-D: `network/http.go` implements CONNECT-based HTTPS-through-HTTP-proxy tunneling with proxy auth via `ProxyConnectHeader` [D: core/network/http.go:449].
-OPEN: authz/input-validation policy beyond the one stated constraint found (MCP client name validation, `mcp/utils.go:857`) — a full security review of `core/` was not performed as part of this reversal.
+D: `core/network/http.go` implements CONNECT-based HTTPS-through-HTTP-proxy tunneling with proxy auth via `ProxyConnectHeader` [D: core/network/http.go:449].
+OPEN: authz/input-validation policy beyond the one stated constraint found (MCP client name validation, `core/mcp/utils.go:857`) — a full security review of `core/` was not performed as part of this reversal.
 
 ## Review checklist
 

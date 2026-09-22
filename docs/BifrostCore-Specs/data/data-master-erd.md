@@ -9,7 +9,7 @@ updated: 2026-09-21
 
 > The system-wide entity registry and relationship map. Every entity is introduced here once and referenced everywhere else.
 
-> This registry is a **Go type contract**, not a persistence schema. The survey found no DDL, migration or ORM model scoped to `core/` — one low-confidence, unextractable struct was flagged as noise [D: survey "Entities" — `providers/gemini/types.go:1345`, confidence: low]. `core/` is stateless: it defines the shapes that flow through it in memory and over the wire to providers, and persists nothing itself. Actual storage lives in `framework/configstore` and `framework/logstore`, outside this reversed scope — OPEN whether those should get their own future reversal pass.
+> This registry is a **Go type contract**, not a persistence schema. The survey found no DDL, migration or ORM model scoped to `core/` — one low-confidence, unextractable struct was flagged as noise [D: survey "Entities" — `core/providers/gemini/types.go:1345`, confidence: low]. `core/` is stateless: it defines the shapes that flow through it in memory and over the wire to providers, and persists nothing itself. Actual storage lives in `framework/configstore` and `framework/logstore`, outside this reversed scope — OPEN whether those should get their own future reversal pass.
 
 ## Entity registry
 
@@ -61,5 +61,5 @@ OPEN: `core/` has no migration mechanism (it's not a database) — how a breakin
 
 ## Open questions
 
-- OPEN: is the "type contract, not persistence schema" framing correct, or does `core/` genuinely have some entity this survey mis-scored as low-confidence noise (`providers/gemini/types.go:1345`)? Worth a manual read before treating this registry as complete.
+- OPEN: is the "type contract, not persistence schema" framing correct, or does `core/` genuinely have some entity this survey mis-scored as low-confidence noise (`core/providers/gemini/types.go:1345`)? Worth a manual read before treating this registry as complete.
 - OPEN: should `framework/configstore`'s actual persisted entities be cross-referenced here as "consumers of core's contract," given `core/` defines the shapes but never stores them?
